@@ -1,7 +1,11 @@
-import { getStatus, getStats } from '../controllers/AppController';
+import Router from 'express';
+import AppController from '../controllers/AppController';
+import UsersController from '../controllers/UsersController';
 
-// export the routes handeler function
-export function setRoutes (app) {
-  app.get('/status', getStatus);
-  app.get('/stats', getStats);
-}
+const router = Router();
+
+router.get('/status', AppController.getStatus);
+router.get('/stats', AppController.getStats);
+router.post('/users', UsersController.postNew);
+
+export default router;

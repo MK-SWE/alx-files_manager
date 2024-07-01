@@ -1,13 +1,15 @@
 import express from 'express';
-import { setRoutes } from './routes/index';
+import router from './routes/index';
 
 const app = express();
 
 // set the listening port
 const PORT = process.env.PORT || 5000;
 
-// Set the api routes using routes/index.js
-setRoutes(app);
+// make the app support json format
+app.use(express.json());
+// Set the api routes using express router
+app.use(router);
 
 // start the app server
 app.listen(PORT, () => {
