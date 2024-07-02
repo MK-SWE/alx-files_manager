@@ -12,3 +12,13 @@
 - `get(key: string): Promise<string>` - _Get the value of a key from the Redis server._
 - `set(key: string, value: string, duration: string): Promise<void>` - _Set the value of a key in the Redis server._
 - `del(key: string): Promise<void>` - _Delete a key from the Redis server._
+
+## [DB Client](./db.js)
+
+> Contains a MongoDB client that can be used to interact with the MongoDB server.
+
+**The Client has the following methods:**
+
+- `isAlive(): boolean` - _Check if the MongoDB server is alive._
+- `nbUsers(): Promise<number>` - _Get the number of users in the database._
+- `nbFiles(): Promise<number>` - _Get the number of files in the database._
