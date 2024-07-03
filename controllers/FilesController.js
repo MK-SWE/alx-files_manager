@@ -238,4 +238,69 @@ export default class FilesController {
         : file.parentId.toString(),
     });
   }
+
+  /**
+   * return the content of the file document based on the ID
+   * @param {Request} request The Express request object.
+   * @param {Response} response The Express response object.
+   * @returns {Promise<Object>}
+   */
+  static async getFile(request, response) {
+    const { user } = request;
+    const { id } = request.params;
+    const userId = user._id.toString();
+    const fileFilter = {
+      _id: new mongoDBCore.BSON.ObjectId(isValidId(id) ? id : NULL_ID),
+      userId: new mongoDBCore.BSON.ObjectId(isValidId(userId) ? userId : NULL_ID)
+    };
+    const file = await (await dbClient.filesCollection())
+      .findOne(fileFilter);
+
+    if (!file) {
+      response.status(404).json({ error: 'Not found' });
+      return;
+    }
+    console.log(file.localPath);
+    if (!file.isPublic) {
+      const user = await FilesController.getUser(request);
+      if (!user) {
+        return response.status(404).json({ error: 'Not found' });
+      }
+      if (file.userId.toString() !== user._id.toString()) {
+        console.log(`Wrong user: file.userId=${file.userId}; userId=${user._id}`);
+        return response.status(404).json({ error: 'Not found' });
+      }
+      if (file.type === 'folder') {
+        return response.status(400).json({ error: "A folder doesn't have content" });
+      }
+      try {
+        let fileName = file.localPath;
+        const size = request.param('size');
+        if (size) {
+          fileName = `${file.localPath}_${size}`;
+        }
+        const contentType = mime.contentType(file.name);
+        return response.header('Content-Type', contentType).status(200).sendFile(fileName);
+      } catch (error) {
+        console.log(error);
+        return response.status(404).json({ error: 'Not found' });
+      }
+    }
+    if (file.type === 'folder') {
+      return response.status(400).json({ error: "A folder doesn't have content" });
+    }
+    try {
+      let fileName = file.localPath;
+      const size = request.param('size');
+      if (size) {
+        fileName = `${file.localPath}_${size}`;
+      }
+      const data = await fs.readFile(fileName);
+      const contentType = mime.contentType(file.name);
+      return response.header('Content-Type', contentType).status(200).send(data);
+    } catch (error) {
+      console.log(error);
+      return response.status(404).json({ error: 'Not found' });
+    }
+  }
 }
