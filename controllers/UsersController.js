@@ -16,6 +16,7 @@ export default class UserController {
     }
     if (!await dbClient.client.db().collection('users').findOne({ email })) {
       const user = await dbClient.addUser(email, password);
+      await userQueue.add({ userId: newUser._id.toString() });
       return response.status(201).json(user);
     }
     const message = { error: 'Already exist' };
