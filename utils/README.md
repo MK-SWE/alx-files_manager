@@ -22,3 +22,5 @@
 - `isAlive(): boolean` - _Check if the MongoDB server is alive._
 - `nbUsers(): Promise<number>` - _Get the number of users in the database._
 - `nbFiles(): Promise<number>` - _Get the number of files in the database._
+- `addUser(email: string, password: string): Promise<user>` - _Add a new user to the database._
+- `getUser(id: string): Promise<user>` - _Get a user from the database._
