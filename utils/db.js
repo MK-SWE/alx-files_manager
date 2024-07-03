@@ -1,7 +1,6 @@
 import { MongoClient, ObjectId } from 'mongodb';
 import { env } from 'process';
 import sha1 from 'sha1';
-import isValidId from './id_validator';
 
 // MongoDB client
 class DBClient {

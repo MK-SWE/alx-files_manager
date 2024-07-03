@@ -7,7 +7,7 @@ export default class AppController {
       res.send({ redis: true, db: true });
     }
   }
-  
+
   static async getStats (request, response) {
     const users = await dbClient.nbUsers();
     const files = await dbClient.nbFiles();
