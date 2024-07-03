@@ -17,10 +17,9 @@ export default class UserController {
     if (!await dbClient.client.db().collection('users').findOne({ email })) {
       const user = await dbClient.addUser(email, password);
       return response.status(201).json(user);
-    } else {
-      const message = { error: 'Already exist' };
-      return response.status(400).json(message);
     }
+    const message = { error: 'Already exist' };
+    return response.status(400).json(message);
   }
 
   /**
