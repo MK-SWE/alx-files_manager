@@ -8,19 +8,18 @@ export default class UserController {
      * @param response {Object} : The response object
      * @returns {Promise<Object>}
      */
-  static async postNew(request, response) {
+  static async postNew (request, response) {
     const { email, password } = request.body;
     if (!email || !password) {
       const message = { error: `Missing ${email ? 'password' : 'email'}` };
-      response.status(400).json(message);
+      return response.status(400).json(message);
     }
     if (!await dbClient.client.db().collection('users').findOne({ email })) {
       const user = await dbClient.addUser(email, password);
-      response.status(201).json(user);
-    } else {
-      const message = { error: 'Already exist' };
-      response.status(400).json(message);
+      return response.status(201).json(user);
     }
+    const message = { error: 'Already exist' };
+    return response.status(400).json(message);
   }
 
   /**
@@ -31,7 +30,7 @@ export default class UserController {
    * @return {Promise<void>} - A promise that resolves when the user information
    *     is retrieved and sent as a JSON response.
    */
-  static async getMe(req, res) {
+  static async getMe (req, res) {
     const token = req.headers['x-token'];
     const userID = await redisClient.get(`auth_${token}`);
     if (!userID) {
