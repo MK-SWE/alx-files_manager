@@ -8,7 +8,7 @@ export default class UserController {
      * @param response {Object} : The response object
      * @returns {Promise<Object>}
      */
-  static async postNew(request, response) {
+  static async postNew (request, response) {
     const { email, password } = request.body;
     if (!email || !password) {
       const message = { error: `Missing ${email ? 'password' : 'email'}` };
@@ -30,7 +30,7 @@ export default class UserController {
    * @return {Promise<void>} - A promise that resolves when the user information
    *     is retrieved and sent as a JSON response.
    */
-  static async getMe(req, res) {
+  static async getMe (req, res) {
     const token = req.headers['x-token'];
     const userID = await redisClient.get(`auth_${token}`);
     if (!userID) {

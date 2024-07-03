@@ -7,7 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // make the app support json format
-app.use(express.json());
+app.use(express.json({ limit: '5mb' }));
 // Set the api routes using express router
 app.use(router);
 
