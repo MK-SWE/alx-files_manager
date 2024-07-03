@@ -8,7 +8,7 @@ import { createClient } from 'redis';
 export class RedisClient {
   // Creates a new redis client and connect to the server
 
-  constructor () {
+  constructor() {
     this.client = createClient();
     this.conected = true;
     this.client
@@ -26,14 +26,14 @@ export class RedisClient {
      * Check if the client is connected to the Redis server
      * @returns {boolean}
      */
-  isAlive () { return this.conected; }
+  isAlive() { return this.conected; }
 
   /**
      * Get the value of a key in the Redis store
      * @param {String} key : The key to get the value of
      * @returns {Promise<String | Object | null>}
      */
-  async get (key) {
+  async get(key) {
     return promisify(this.client.GET).bind(this.client)(key);
   }
 
@@ -44,7 +44,7 @@ export class RedisClient {
      * @param {Number} duration : The expiration time in seconds
      * @returns {Promise<void>}
      */
-  async set (key, value, duration) {
+  async set(key, value, duration) {
     await promisify(this.client.SETEX)
       .bind(this.client)(key, duration, value);
   }
@@ -54,7 +54,7 @@ export class RedisClient {
      * @param {String} key : The key to delete
      * @returns {Promise<void>}
      */
-  async del (key) {
+  async del(key) {
     await promisify(this.client.DEL).bind(this.client)(key);
   }
 }

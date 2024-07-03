@@ -11,7 +11,7 @@ export default class AuthController {
    * @param {Object} res - The response object
    * @returns {Promise<void>}
    */
-  static async getConnect (req, res) {
+  static async getConnect(req, res) {
     const auth = req.headers.authorization;
     if (auth) {
       const [type, token] = auth.split(' ');
@@ -48,7 +48,7 @@ export default class AuthController {
    * @param {Object} res - The response object
    * @return {Promise<void>}
    */
-  static async getDisconnect (req, res) {
+  static async getDisconnect(req, res) {
     const token = req.headers['x-token'];
     await redisClient.del(`auth_${token}`);
     res.status(200).send();
