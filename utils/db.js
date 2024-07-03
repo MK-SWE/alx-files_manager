@@ -1,7 +1,6 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 import { env } from 'process';
-
-const crypto = require('crypto');
+import sha1 from 'sha1';
 
 // MongoDB client
 class DBClient {
@@ -46,12 +45,26 @@ class DBClient {
   * @returns {Promise<Object>}
   */
   async addUser(email, password) {
-    const hashedPassword = crypto.createHash('sha1').update(password).digest('hex');
+    const hashedPassword = sha1(password);
     const user = await this.client
       .db()
       .collection('users')
       .insertOne({ email, password: hashedPassword });
     return { _id: user.insertedId, email };
+  }
+
+  /**
+ * Retrieves a user from the database based on the provided ID.
+ *
+ * @param {string} id - The ID of the user.
+ * @return {Promise<Object>} A Promise that resolves to the user object.
+ */
+  async getUser(id) {
+    const user = await this.client
+      .db()
+      .collection('users')
+      .findOne({ _id: new ObjectId(id) });
+    return user;
   }
 }
 
